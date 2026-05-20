@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polar Bear Tuition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ice:#eaf5fb;--ice2:#c8e8f5;--ice3:#8ecce8;
+  --snow:#f7fbfd;
+  --arctic:#112233;--arct2:#0a1a28;--arct3:#1e3a52;
+  --blue:#1d6fa4;--blueh:#155880;
+  --cyan:#0099bb;
+  --mint:#d6f0e8;--minth:#157a5e;
+  --gold:#f0c44a;--goldh:#c9980e;
+  --white:#fff;
+  --text:#112233;--text2:#3d5a70;--text3:#7a9ab5;
+  --font-display:'Playfair Display',serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --r:14px;--rbig:22px;--rpill:100px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--snow);color:var(--text);overflow-x:hidden;cursor:none}
+
+/* ── CURSOR ── */
+#cur{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);width:9px;height:9px;background:var(--cyan);border-radius:50%}
+#ring{position:fixed;width:34px;height:34px;border:1.5px solid rgba(0,153,187,.38);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s}
+#ring.big{width:50px;height:50px;border-color:var(--cyan)}
+
+/* ── CSS BLOB BG ── */
+.bg-blobs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);animation:blob-drift ease-in-out infinite}
+.blob1{width:700px;height:560px;background:rgba(180,225,245,0.22);top:-180px;left:-160px;animation-duration:28s}
+.blob2{width:580px;height:580px;background:rgba(195,238,250,0.16);top:20%;right:-180px;animation-duration:36s;animation-delay:-12s}
+.blob3{width:500px;height:420px;background:rgba(210,245,255,0.13);bottom:-100px;left:18%;animation-duration:24s;animation-delay:-7s}
+.blob4{width:420px;height:420px;background:rgba(175,230,240,0.14);bottom:15%;right:8%;animation-duration:32s;animation-delay:-18s}
+@keyframes blob-drift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-22px) scale(1.04)}
+  66%{transform:translate(-18px,28px) scale(0.97)}
+}
+
+/* ── FLOATING CRYSTALS ── */
+.crystals{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.crystal{position:absolute;top:-60px;opacity:0;animation:crystal-fall linear infinite;pointer-events:none;user-select:none}
+@keyframes crystal-fall{
+  0%  {opacity:0;transform:translateY(0) rotate(0deg)}
+  6%  {opacity:1}
+  94% {opacity:.5}
+  100%{opacity:0;transform:translateY(110vh) rotate(600deg)}
+}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.4rem 4rem;display:flex;justify-content:space-between;align-items:center;transition:all .5s}
+nav.scrolled{background:rgba(247,251,253,.93);backdrop-filter:blur(24px);padding:1rem 4rem;box-shadow:0 1px 0 var(--ice2),0 4px 28px rgba(0,100,160,.07)}
+.nav-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none}
+.nav-logo-icon{width:30px;height:30px}
+.nav-logo-text{font-family:var(--font-body);font-size:.95rem;font-weight:600;color:var(--arctic);letter-spacing:-.01em}
+.nav-logo-text span{color:var(--cyan)}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{font-family:var(--font-body);font-size:.82rem;color:var(--text2);text-decoration:none;font-weight:500;transition:color .25s}
+.nav-links a:not(.cta):hover{color:var(--cyan)}
+.cta{background:var(--arctic);color:white!important;padding:.52rem 1.35rem;border-radius:8px;font-weight:600!important;font-size:.8rem!important;transition:all .25s!important}
+.cta:hover{background:var(--blue)!important;transform:translateY(-1px)!important;box-shadow:0 6px 20px rgba(0,100,160,.2)!important}
+
+/* ── HERO ── */
+#hero{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;padding:9rem 4rem 5rem}
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 400px;gap:6rem;align-items:center}
+
+.tag-pill{display:inline-flex;align-items:center;gap:.5rem;border:1.5px solid var(--ice3);border-radius:var(--rpill);padding:.36rem 1rem .36rem .65rem;margin-bottom:1.8rem;font-family:var(--font-mono);font-size:.68rem;color:var(--text3);letter-spacing:.06em}
+.tag-dot{width:6px;height:6px;background:var(--minth);border-radius:50%;animation:pulse-d 2.5s infinite}
+@keyframes pulse-d{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(1.45)}}
+
+.hero-name{animation:slide-up .9s cubic-bezier(.16,1,.3,1) both}
+.hero-name .n1{display:block;font-family:var(--font-display);font-size:clamp(2.8rem,5.2vw,4.4rem);font-weight:800;color:var(--arctic);line-height:1.06;letter-spacing:-.02em}
+.hero-name .n1 em{font-style:italic;color:var(--cyan)}
+.hero-name .n2{display:block;font-family:var(--font-body);font-size:clamp(.9rem,1.5vw,1.05rem);color:var(--text3);margin-top:.7rem;font-weight:400}
+
+.tagline{font-family:var(--font-display);font-size:1.05rem;font-style:italic;color:var(--cyan);margin:1.1rem 0 1.4rem;opacity:.85;animation:slide-up .9s .06s cubic-bezier(.16,1,.3,1) both}
+.chips{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:1.6rem;animation:slide-up .9s .12s cubic-bezier(.16,1,.3,1) both}
+.chip{padding:.3rem .9rem;border-radius:6px;font-family:var(--font-mono);font-size:.67rem;border:1.5px solid transparent;letter-spacing:.04em}
+.chip-blue{background:var(--ice);border-color:var(--ice3);color:var(--blue)}
+.chip-teal{background:var(--mint);border-color:rgba(21,122,94,.2);color:var(--minth)}
+.chip-gold{background:#fdf5dc;border-color:rgba(201,152,14,.25);color:var(--goldh)}
+.hero-p{color:var(--text2);font-size:.93rem;line-height:1.88;max-width:430px;margin-bottom:2.1rem;animation:slide-up .9s .18s cubic-bezier(.16,1,.3,1) both}
+.hero-btns{display:flex;gap:.75rem;flex-wrap:wrap;animation:slide-up .9s .24s cubic-bezier(.16,1,.3,1) both}
+.btn1{display:inline-flex;align-items:center;gap:.5rem;padding:.78rem 1.8rem;background:var(--arctic);color:white;border-radius:9px;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .28s}
+.btn1:hover{background:var(--blue);transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,100,160,.2)}
+.btn2{display:inline-flex;align-items:center;gap:.5rem;padding:.78rem 1.8rem;background:transparent;color:var(--text2);border:1.5px solid var(--ice3);border-radius:9px;font-size:.85rem;font-weight:500;text-decoration:none;transition:all .25s}
+.btn2:hover{border-color:var(--cyan);color:var(--cyan);background:var(--ice)}
+@keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO CARD ── */
+.hero-card{background:rgba(255,255,255,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:var(--rbig);padding:2rem;box-shadow:0 2px 0 var(--ice2) inset,0 20px 70px rgba(0,100,160,.09);border:1.5px solid var(--ice2);position:relative;overflow:hidden;animation:slide-up 1s .08s cubic-bezier(.16,1,.3,1) both}
+.hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--minth))}
+.pb-char{display:block;margin:0 auto 1rem;animation:bear-float 5s ease-in-out infinite}
+@keyframes bear-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.pb-shadow{width:70px;height:10px;background:rgba(0,120,180,.1);border-radius:50%;margin:0 auto 1.4rem;animation:shadow-pulse 5s ease-in-out infinite}
+@keyframes shadow-pulse{0%,100%{transform:scaleX(1);opacity:.55}50%{transform:scaleX(.7);opacity:.2}}
+.hcard-stats{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.hs{padding:.8rem 1rem;background:rgba(234,245,251,.7);border-radius:10px;border:1.5px solid var(--ice2);transition:all .25s;cursor:default;text-align:center}
+.hs:hover{background:var(--ice);border-color:var(--ice3)}
+.hs-n{font-family:var(--font-display);font-size:1.45rem;font-weight:700;color:var(--arctic);line-height:1}
+.hs-l{font-family:var(--font-mono);font-size:.6rem;color:var(--text3);margin-top:.25rem;letter-spacing:.04em}
+
+/* ── MARQUEE ── */
+.mq{position:relative;z-index:2;padding:1.2rem 0;overflow:hidden;background:var(--arctic)}
+.mq-track{display:flex;white-space:nowrap;animation:mq-scroll 34s linear infinite}
+.mq:hover .mq-track{animation-play-state:paused}
+.mq-item{display:inline-flex;align-items:center;gap:1.4rem;padding:0 2rem;font-family:var(--font-mono);font-size:.7rem;color:rgba(255,255,255,.45);letter-spacing:.08em}
+.mq-sep{color:var(--cyan);opacity:.45}
+@keyframes mq-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── SECTIONS ── */
+.sec{position:relative;z-index:2;padding:7rem 4rem}
+.wrap{max-width:1080px;margin:0 auto}
+.sec-tag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.68rem;color:var(--cyan);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.9rem}
+.sec-tag::before{content:'';display:inline-block;width:18px;height:1.5px;background:var(--cyan)}
+.sec-h{font-family:var(--font-display);font-size:clamp(2rem,3.4vw,2.8rem);font-weight:800;color:var(--arctic);margin-bottom:1rem;line-height:1.15;letter-spacing:-.02em}
+.sec-h em{font-style:italic;color:var(--cyan)}
+
+/* ── POLAR BEAR TRAITS ── */
+.pb-traits{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem}
+.trait{background:rgba(247,251,253,.9);border-radius:var(--rbig);padding:1.8rem 1.6rem;border:1.5px solid var(--ice2);transition:all .32s}
+.trait:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,100,160,.09);background:white;border-color:var(--ice3)}
+.trait-icon{margin-bottom:1rem}
+.trait-t{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--arctic);margin-bottom:.55rem;letter-spacing:-.01em}
+.trait-d{font-size:.82rem;color:var(--text2);line-height:1.8}
+@media(max-width:950px){.pb-traits{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.pb-traits{grid-template-columns:1fr}}
+
+/* ── ABOUT ── */
+#about{background:rgba(255,255,255,.75);backdrop-filter:blur(12px)}
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;align-items:start}
+.ab-p{font-size:.94rem;color:var(--text2);line-height:1.88;margin-bottom:.9rem}
+.creds{display:flex;flex-direction:column;gap:.8rem}
+.cr{background:rgba(247,251,253,.85);border-radius:var(--r);padding:1.4rem 1.6rem;border:1.5px solid var(--ice2);position:relative;overflow:hidden;transition:all .32s}
+.cr:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,100,160,.08);background:var(--white)}
+.cr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.cr.cg::before{background:linear-gradient(180deg,var(--gold),#e8b800)}
+.cr.cb::before{background:linear-gradient(180deg,var(--cyan),var(--blue))}
+.cr.cs::before{background:linear-gradient(180deg,var(--minth),#2aaa88)}
+.cr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;margin-bottom:.4rem}
+.cr-name{font-weight:600;font-size:.9rem;color:var(--arctic)}
+.badge{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;padding:.22rem .7rem;border-radius:5px;white-space:nowrap;flex-shrink:0;border:1.5px solid transparent}
+.bg{background:#fdf5dc;border-color:rgba(201,152,14,.25);color:var(--goldh)}
+.bb{background:var(--ice);border-color:var(--ice3);color:var(--blue)}
+.bs{background:var(--mint);border-color:rgba(21,122,94,.22);color:var(--minth)}
+.cr-desc{font-size:.82rem;color:var(--text2);line-height:1.72}
+
+/* ── SERVICES ── */
+#services{background:rgba(234,245,251,.6);backdrop-filter:blur(10px)}
+.srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.8rem}
+.srv{background:rgba(255,255,255,.88);border-radius:var(--rbig);padding:2.2rem;border:1.5px solid var(--ice2);transition:all .35s}
+.srv:hover{transform:translateY(-7px);box-shadow:0 20px 52px rgba(0,100,160,.1)}
+.srv-line{width:24px;height:2px;border-radius:2px;margin-bottom:1.4rem;background:linear-gradient(90deg,var(--cyan),var(--blue))}
+.srv:nth-child(2) .srv-line{background:linear-gradient(90deg,var(--minth),var(--cyan))}
+.srv:nth-child(3) .srv-line{background:linear-gradient(90deg,var(--goldh),var(--cyan))}
+.srv-t{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--arctic);margin-bottom:.55rem;letter-spacing:-.01em}
+.srv-d{font-size:.85rem;color:var(--text2);line-height:1.85;margin-bottom:1.4rem}
+.srv-tags{display:flex;flex-wrap:wrap;gap:.38rem}
+.stag{font-family:var(--font-mono);font-size:.62rem;color:var(--text3);background:var(--snow);padding:.22rem .65rem;border-radius:5px;border:1.5px solid var(--ice2);letter-spacing:.04em}
+
+/* ── PRICING ── */
+#pricing{background:rgba(255,255,255,.75);backdrop-filter:blur(12px)}
+.price-tabs{display:flex;gap:.4rem;margin-bottom:2rem;background:var(--snow);border-radius:10px;padding:.3rem;width:fit-content;border:1.5px solid var(--ice2)}
+.ptab{font-family:var(--font-body);font-size:.8rem;font-weight:500;color:var(--text3);padding:.5rem 1.3rem;border-radius:7px;cursor:pointer;transition:all .25s;border:none;background:transparent}
+.ptab.active{background:var(--arctic);color:white;box-shadow:0 2px 10px rgba(0,30,60,.14)}
+.price-panel{display:none}
+.price-panel.active{display:block}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
+.pcard{background:rgba(247,251,253,.9);border-radius:var(--rbig);padding:2rem 1.8rem;border:1.5px solid var(--ice2);position:relative;overflow:hidden;transition:all .3s;text-align:center}
+.pcard:hover{transform:translateY(-5px);box-shadow:0 16px 44px rgba(0,100,160,.09)}
+.pcard.featured{background:var(--arctic);border-color:var(--arct3)}
+.pcard.featured::after{content:'Most popular';position:absolute;top:.9rem;right:.9rem;font-family:var(--font-mono);font-size:.58rem;background:var(--cyan);color:white;padding:.2rem .6rem;border-radius:4px;letter-spacing:.04em}
+.pc-t{font-size:.85rem;font-weight:600;color:var(--text2);margin-bottom:.5rem}
+.pcard.featured .pc-t{color:rgba(255,255,255,.55)}
+.pc-price{font-family:var(--font-display);font-size:2.8rem;font-weight:700;color:var(--arctic);line-height:1;margin:.5rem 0 .2rem}
+.pcard.featured .pc-price{color:white}
+.pc-per{font-family:var(--font-mono);font-size:.66rem;color:var(--text3);margin-bottom:.9rem;letter-spacing:.04em}
+.pcard.featured .pc-per{color:rgba(255,255,255,.38)}
+.pc-desc{font-size:.82rem;color:var(--text2);line-height:1.75}
+.pcard.featured .pc-desc{color:rgba(255,255,255,.58)}
+.pc-note{margin-top:.9rem;font-family:var(--font-mono);font-size:.65rem;color:var(--minth);letter-spacing:.04em}
+.pcard.featured .pc-note{color:#5dd8a0}
+.price-note{text-align:center;font-family:var(--font-mono);font-size:.7rem;color:var(--text3);margin-top:1.4rem;letter-spacing:.04em}
+.group-info{background:rgba(234,245,251,.8);border-radius:var(--rbig);padding:1.8rem 2rem;border:1.5px solid var(--ice2)}
+.group-info p{font-size:.88rem;color:var(--text2);line-height:1.85;margin-bottom:.6rem}
+.group-info p:last-child{margin-bottom:0;color:var(--cyan)}
+
+/* ── TESTIMONIALS ── */
+#testimonials{background:rgba(234,245,251,.6);backdrop-filter:blur(10px)}
+.tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:2.8rem}
+.tst{background:rgba(255,255,255,.88);border-radius:var(--rbig);padding:1.8rem 2rem;border:1.5px solid var(--ice2);transition:all .32s;position:relative;overflow:hidden}
+.tst:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,100,160,.09)}
+.tst::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);opacity:0;transition:opacity .32s}
+.tst:hover::before{opacity:1}
+.tst-qm{font-family:var(--font-display);font-size:3.5rem;color:var(--ice3);line-height:.75;margin-bottom:.6rem;font-weight:700}
+.tst-b{font-size:.87rem;color:var(--text2);line-height:1.9;margin-bottom:1.2rem;font-style:italic}
+.tst-div{width:1.8rem;height:1.5px;background:var(--ice3);margin-bottom:.8rem}
+.tst-who{font-family:var(--font-mono);font-size:.63rem;color:var(--text3);letter-spacing:.07em;text-transform:uppercase}
+
+/* ── PHILOSOPHY ── */
+#philosophy{background:rgba(255,255,255,.75);backdrop-filter:blur(12px)}
+.ph-grid{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;align-items:center}
+.ph-p{font-size:.94rem;color:var(--text2);line-height:1.88;margin-bottom:.9rem}
+.prins{display:flex;flex-direction:column;gap:.7rem}
+.prin{display:grid;grid-template-columns:2.2rem 1fr;gap:.8rem;align-items:start;padding:1.1rem 1.3rem;background:rgba(247,251,253,.85);border-radius:var(--r);border:1.5px solid var(--ice2);transition:all .28s}
+.prin:hover{background:var(--ice);border-color:var(--ice3)}
+.p-num{font-family:var(--font-mono);font-size:.75rem;color:var(--cyan);line-height:1.6;letter-spacing:.04em}
+.p-t{font-weight:600;font-size:.88rem;color:var(--arctic);margin-bottom:.22rem}
+.p-d{font-size:.81rem;color:var(--text2);line-height:1.75}
+
+/* ── RESULTS ── */
+#results{background:rgba(234,245,251,.6);backdrop-filter:blur(10px)}
+.res-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem;margin-bottom:1.1rem}
+.res-card{background:rgba(255,255,255,.88);border-radius:var(--r);padding:1.4rem 1.6rem;border:1.5px solid var(--ice2);display:flex;align-items:center;gap:1rem;transition:all .28s}
+.res-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,100,160,.08);border-color:var(--ice3)}
+.res-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);flex-shrink:0}
+.res-title{font-weight:600;font-size:.9rem;color:var(--arctic);margin-bottom:.2rem}
+.res-sub{font-family:var(--font-mono);font-size:.62rem;color:var(--text3);letter-spacing:.04em}
+.schols{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+.sch{background:var(--arctic);border-radius:var(--rbig);padding:1.8rem;text-align:center;position:relative;overflow:hidden;transition:transform .28s}
+.sch:hover{transform:translateY(-5px)}
+.sch::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(0,153,187,.16),transparent)}
+.sch-line{width:18px;height:2px;background:var(--cyan);border-radius:2px;margin:0 auto .8rem;opacity:.65}
+.sch-n{font-weight:600;font-size:.88rem;color:white;margin-bottom:.28rem;position:relative;z-index:1}
+.sch-s{font-family:var(--font-mono);font-size:.6rem;color:rgba(255,255,255,.32);letter-spacing:.08em;text-transform:uppercase;position:relative;z-index:1}
+
+/* ── CONTACT ── */
+#contact{background:var(--arctic);position:relative;overflow:hidden}
+#contact::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 15% 60%,rgba(0,153,187,.14),transparent 50%),radial-gradient(ellipse at 85% 40%,rgba(0,100,160,.1),transparent 50%)}
+.ct-inner{max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.ct-pill{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.68rem;color:rgba(0,220,255,.5);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.4rem}
+.ct-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse-d 2.5s infinite}
+.ct-h{font-family:var(--font-display);font-size:clamp(2.4rem,4.5vw,3.2rem);font-weight:800;color:white;line-height:1.15;margin-bottom:1rem;letter-spacing:-.02em}
+.ct-h em{font-style:italic;color:rgba(0,210,240,.65)}
+.ct-p{font-size:.93rem;color:rgba(255,255,255,.44);line-height:1.88;margin-bottom:2.2rem}
+.enq-form{background:rgba(255,255,255,.05);backdrop-filter:blur(16px);border:1.5px solid rgba(255,255,255,.09);border-radius:var(--rbig);padding:2.2rem;margin-bottom:2rem;text-align:left}
+.enq-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.enq-field{display:flex;flex-direction:column;gap:.38rem;margin-bottom:1rem}
+.enq-label{font-family:var(--font-mono);font-size:.67rem;color:rgba(255,255,255,.42);letter-spacing:.07em}
+.enq-input{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.1);border-radius:8px;padding:.68rem 1rem;font-family:var(--font-body);font-size:.87rem;color:white;outline:none;transition:border-color .25s,background .25s}
+.enq-input::placeholder{color:rgba(255,255,255,.22)}
+.enq-input:focus{border-color:var(--cyan);background:rgba(0,153,187,.08)}
+.enq-input option{color:var(--text);background:white}
+textarea.enq-input{resize:vertical;min-height:88px}
+.enq-submit{width:100%;padding:.85rem;background:var(--cyan);color:white;border:none;border-radius:9px;font-family:var(--font-body);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .28s}
+.enq-submit:hover{background:#00aacf;transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,153,187,.28)}
+.ct-note{font-family:var(--font-mono);font-size:.63rem;color:rgba(255,255,255,.18);letter-spacing:.1em;text-transform:uppercase}
+
+/* ── FOOTER ── */
+footer{background:var(--arct2);border-top:1px solid rgba(255,255,255,.05);padding:1.6rem 4rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+.fl{font-size:.82rem;font-weight:500;color:rgba(255,255,255,.2)}
+.fl span{color:rgba(0,200,230,.28)}
+.fr{font-family:var(--font-mono);font-size:.62rem;color:rgba(255,255,255,.14);letter-spacing:.08em}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1)}
+.rl{opacity:0;transform:translateX(-20px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1)}
+.rr{opacity:0;transform:translateX(20px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1)}
+.rv.on,.rl.on,.rr.on{opacity:1;transform:translate(0,0)}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}
+
+@media(max-width:950px){
+  nav,footer{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .sec,#hero{padding:5.5rem 1.5rem}
+  .hero-inner,.ab-grid,.ph-grid{grid-template-columns:1fr;gap:2.5rem}
+  .hero-card{display:none}
+  .srv-grid,.tst-grid,.schols,.price-grid,.res-grid{grid-template-columns:1fr}
+  .enq-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="ring"></div>
+
+<!-- CSS blob background -->
+<div class="bg-blobs">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="blob blob4"></div>
+</div>
+
+<!-- Floating ice crystal SVGs -->
+<div class="crystals" id="crystals"></div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a class="nav-logo" href="#">
+    <svg class="nav-logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="18" r="10" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.4"/>
+      <circle cx="16" cy="13.5" r="7" fill="#f3f9fd" stroke="#8ecce8" stroke-width="1.4"/>
+      <circle cx="11.5" cy="8.5" r="3" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.4"/>
+      <circle cx="20.5" cy="8.5" r="3" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.4"/>
+      <circle cx="13.5" cy="13" r="1.1" fill="#112233"/>
+      <circle cx="18.5" cy="13" r="1.1" fill="#112233"/>
+      <ellipse cx="16" cy="15.8" rx="1.5" ry="1.1" fill="#112233"/>
+      <path d="M13.5 18 Q16 20 18.5 18" stroke="#112233" stroke-width=".9" stroke-linecap="round" fill="none"/>
+      <rect x="10.5" y="19.5" width="11" height="2.8" rx="1.4" fill="#0099bb" opacity=".75"/>
+    </svg>
+    <div class="nav-logo-text">Polar Bear <span>Tuition</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#why">The Name</a></li>
+    <li><a href="#services">Subjects</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#philosophy">Approach</a></li>
+    <li><a href="#contact" class="cta">Book a session</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="tag-pill"><span class="tag-dot"></span> Now enrolling · Sydney NSW</div>
+      <h1 class="hero-name">
+        <span class="n1">Helping students<br>achieve their <em>PB</em></span>
+        <span class="n2">Maths · Thinking Skills · Junior Science</span>
+      </h1>
+      <p class="tagline">Polar Bear Tuition: helping you achieve your PB.</p>
+      <div class="chips">
+        <span class="chip chip-blue">OC Prep</span>
+        <span class="chip chip-teal">Selective Entry</span>
+        <span class="chip chip-gold">Scholarships</span>
+      </div>
+      <p class="hero-p">I believe every student has more in them than their current marks show. My job is to figure out exactly where the gaps are, close them methodically, and build the kind of confidence that shows up on exam day, not just in practice. Sessions from $50/hr, online via Zoom or in person, one on one.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn1">Book a session</a>
+        <a href="#results" class="btn2">See results</a>
+      </div>
+    </div>
+    <div>
+      <div class="hero-card">
+        <svg class="pb-char" width="130" height="130" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="70" cy="92" rx="36" ry="32" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.5"/>
+          <circle cx="70" cy="56" r="27" fill="#f4fafd" stroke="#8ecce8" stroke-width="1.5"/>
+          <circle cx="48" cy="35" r="9.5" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.5"/>
+          <circle cx="92" cy="35" r="9.5" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.5"/>
+          <circle cx="48" cy="35" r="4.5" fill="#dceef7"/>
+          <circle cx="92" cy="35" r="4.5" fill="#dceef7"/>
+          <circle cx="62" cy="53" r="3.5" fill="#112233"/>
+          <circle cx="78" cy="53" r="3.5" fill="#112233"/>
+          <circle cx="63.2" cy="51.8" r="1.2" fill="white"/>
+          <circle cx="79.2" cy="51.8" r="1.2" fill="white"/>
+          <ellipse cx="70" cy="61.5" rx="4.5" ry="3.5" fill="#112233"/>
+          <path d="M64.5 67 Q70 72.5 75.5 67" stroke="#112233" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <rect x="44" y="79" width="52" height="9" rx="4.5" fill="#0099bb" opacity=".8"/>
+          <circle cx="44" cy="83.5" r="5.5" fill="#007a99"/>
+          <ellipse cx="37" cy="109" rx="13" ry="9" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.5"/>
+          <ellipse cx="103" cy="109" rx="13" ry="9" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.5"/>
+          <ellipse cx="56" cy="122" rx="13" ry="7.5" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.2"/>
+          <ellipse cx="84" cy="122" rx="13" ry="7.5" fill="#eaf5fb" stroke="#8ecce8" stroke-width="1.2"/>
+        </svg>
+        <div class="pb-shadow"></div>
+        <div class="hcard-stats">
+          <div class="hs"><div class="hs-n">OC</div><div class="hs-l">Placements</div></div>
+          <div class="hs"><div class="hs-n">JR</div><div class="hs-l">Selective offers</div></div>
+          <div class="hs"><div class="hs-n">$50</div><div class="hs-l">Per hour</div></div>
+          <div class="hs"><div class="hs-n">3</div><div class="hs-l">Subjects</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="mq">
+  <div class="mq-track">
+    <span class="mq-item">Mathematics <span class="mq-sep">·</span></span>
+    <span class="mq-item">Thinking Skills <span class="mq-sep">·</span></span>
+    <span class="mq-item">Junior Science <span class="mq-sep">·</span></span>
+    <span class="mq-item">OC Preparation <span class="mq-sep">·</span></span>
+    <span class="mq-item">Selective Entry <span class="mq-sep">·</span></span>
+    <span class="mq-item">Academic Scholarships <span class="mq-sep">·</span></span>
+    <span class="mq-item">High School Ready <span class="mq-sep">·</span></span>
+    <span class="mq-item">Personal Best <span class="mq-sep">·</span></span>
+    <span class="mq-item">Mathematics <span class="mq-sep">·</span></span>
+    <span class="mq-item">Thinking Skills <span class="mq-sep">·</span></span>
+    <span class="mq-item">Junior Science <span class="mq-sep">·</span></span>
+    <span class="mq-item">OC Preparation <span class="mq-sep">·</span></span>
+    <span class="mq-item">Selective Entry <span class="mq-sep">·</span></span>
+    <span class="mq-item">Academic Scholarships <span class="mq-sep">·</span></span>
+    <span class="mq-item">High School Ready <span class="mq-sep">·</span></span>
+    <span class="mq-item">Personal Best <span class="mq-sep">·</span></span>
+  </div>
+</div>
+
+<!-- ── WHY POLAR BEAR ── -->
+<section id="why" class="sec" style="background:rgba(255,255,255,.75);backdrop-filter:blur(12px)">
+  <div class="wrap">
+    <div class="rv" style="max-width:560px;margin:0 auto 3rem;text-align:center">
+      <div class="sec-tag" style="justify-content:center">The name</div>
+      <h2 class="sec-h">Why <em>Polar Bear?</em></h2>
+      <p style="font-size:.94rem;color:var(--text2);line-height:1.88;margin-top:.4rem">Polar bears are some of the most remarkable animals on the planet. Not because things come easy to them, but because of how they face difficulty. These are the qualities we aim to reflect in every session.</p>
+    </div>
+    <div class="pb-traits">
+      <div class="trait rv d1">
+        <div class="trait-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#8ecce8" stroke-width="1.5"/><path d="M10 16 Q13 10 16 16 Q19 22 22 16" stroke="#0099bb" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <div class="trait-t">Perseverance</div>
+        <div class="trait-d">Polar bears cover hundreds of kilometres through brutal conditions without stopping. We teach students to keep working through the hard problems, not around them.</div>
+      </div>
+      <div class="trait rv d2">
+        <div class="trait-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#8ecce8" stroke-width="1.5"/><circle cx="16" cy="16" r="5" stroke="#0099bb" stroke-width="1.8"/><line x1="16" y1="4" x2="16" y2="10" stroke="#0099bb" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="22" x2="16" y2="28" stroke="#0099bb" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="16" x2="10" y2="16" stroke="#0099bb" stroke-width="1.5" stroke-linecap="round"/><line x1="22" y1="16" x2="28" y2="16" stroke="#0099bb" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="trait-t">Focus</div>
+        <div class="trait-d">A polar bear hunting is one of nature's most patient creatures. It waits, watches, and acts at exactly the right moment. We build that same focus in how students approach exam questions.</div>
+      </div>
+      <div class="trait rv d3">
+        <div class="trait-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#8ecce8" stroke-width="1.5"/><path d="M10 20 L16 11 L22 20" stroke="#0099bb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="13" y1="17.5" x2="19" y2="17.5" stroke="#0099bb" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="trait-t">Adaptability</div>
+        <div class="trait-d">Polar bears thrive in one of the most demanding environments on earth by adapting to what is in front of them. We teach students to read new problem types and think on their feet, not just recall rehearsed answers.</div>
+      </div>
+      <div class="trait rv d4">
+        <div class="trait-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#8ecce8" stroke-width="1.5"/><path d="M11 13 Q16 8 21 13" stroke="#0099bb" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M10 19 Q16 25 22 19" stroke="#0099bb" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <div class="trait-t">Resilience</div>
+        <div class="trait-d">Getting a question wrong is not a setback. It is information. Polar bears do not abandon the hunt after one miss. We help students treat mistakes the same way: calmly, and as part of the process.</div>
+      </div>
+    </div>
+    <p class="rv" style="text-align:center;font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--cyan);margin-top:2.8rem;opacity:.8">PB stands for Personal Best. That is always the goal.</p>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="sec">
+  <div class="wrap">
+    <div class="ab-grid">
+      <div class="rl">
+        <div class="sec-tag">About</div>
+        <h2 class="sec-h">Multiple scholarship<br><em>holder. Results-focused.</em></h2>
+        <p class="ab-p">My tutoring is built around one idea: that doing things properly from the start is always faster than patching things up later. That means diagnosing exactly where a student is, explaining things until they genuinely click, and only then building towards speed and exam conditions. No shortcuts.</p>
+        <p class="ab-p">I tutor Maths, Thinking Skills, and Junior Science. Junior Science covers Year 5 through to Year 8 and is great for students who want a solid foundation before the workload picks up. Sessions are available online via Zoom or in person at a location we agree on, from $50/hr. Small group lessons are also available for OC prep.</p>
+      </div>
+      <div class="creds rr">
+        <div class="cr cg">
+          <div class="cr-row"><div class="cr-name">Multiple Academic Scholarships</div><div class="badge bg">Scholarship Holder</div></div>
+          <div class="cr-desc">Awarded academic scholarships from some of Sydney's leading independent schools, with top-tier recognition of excellence across Maths and Science.</div>
+        </div>
+        <div class="cr cb">
+          <div class="cr-row"><div class="cr-name">James Ruse Agricultural High School</div><div class="badge bb">Selective Offer</div></div>
+          <div class="cr-desc">Received a selective offer from Australia's consistently top-ranked selective school, and chose an academic scholarship instead.</div>
+        </div>
+        <div class="cr cs">
+          <div class="cr-row"><div class="cr-name">Beecroft Opportunity Class Graduate</div><div class="badge bs">Former OC Student</div></div>
+          <div class="cr-desc">I went through Beecroft OC myself. I know the program, the expectations, and what preparation actually makes a difference.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services" class="sec">
+  <div class="wrap">
+    <div style="text-align:center;max-width:500px;margin:0 auto" class="rv">
+      <div class="sec-tag" style="justify-content:center">Subjects</div>
+      <h2 class="sec-h">Three subjects.<br><em>One clear advantage.</em></h2>
+    </div>
+    <div class="srv-grid">
+      <div class="srv rv d1">
+        <div class="srv-line"></div>
+        <div class="srv-t">Mathematics</div>
+        <div class="srv-d">Focused specifically on OC and selective test preparation. I build genuine mathematical thinking rather than formula recall, covering all the problem types that come up in the OC and selective placement exams.</div>        <div class="srv-tags"><span class="stag">OC Test</span><span class="stag">Selective Test</span><span class="stag">Year 3 to 6</span></div>
+      </div>
+      <div class="srv rv d2">
+        <div class="srv-line"></div>
+        <div class="srv-t">Junior Science</div>
+        <div class="srv-d">For students from primary through to Year 8 who want to build a proper science foundation. We cover the concepts, vocabulary, and reasoning skills that make secondary science much less overwhelming when it ramps up.</div>
+        <div class="srv-tags"><span class="stag">Year 5 to 8</span><span class="stag">Physical</span><span class="stag">Life Science</span><span class="stag">Earth Science</span></div>
+      </div>
+      <div class="srv rv d3">
+        <div class="srv-line"></div>
+        <div class="srv-t">Thinking Skills</div>
+        <div class="srv-d">Often the most neglected part of OC and selective preparation. Logic, pattern recognition, and abstract reasoning are trained systematically until they become instinctive.</div>
+        <div class="srv-tags"><span class="stag">Logical</span><span class="stag">Abstract</span><span class="stag">Verbal</span><span class="stag">OC Exam</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESULTS ── -->
+<section id="results" class="sec">
+  <div class="wrap">
+    <div class="rv" style="max-width:480px;margin-bottom:2.8rem">
+      <div class="sec-tag">Outcomes</div>
+      <h2 class="sec-h">Real students.<br><em>Real results.</em></h2>
+      <p style="font-size:.92rem;color:var(--text2);line-height:1.88;margin-top:.5rem">Students have earned places in some of the most competitive academic programs in Sydney.</p>
+    </div>
+    <div class="res-grid">
+      <div class="res-card rv d1"><div class="res-dot"></div><div><div class="res-title">OC Class Offers</div><div class="res-sub">Multiple placements including Beecroft and Chatswood</div></div></div>
+      <div class="res-card rv d2"><div class="res-dot"></div><div><div class="res-title">James Ruse Offers</div><div class="res-sub">Australia's top-ranked selective school</div></div></div>
+      <div class="res-card rv d3"><div class="res-dot"></div><div><div class="res-title">Sydney Boys High + other selective schools</div><div class="res-sub">NSW selective high school offers</div></div></div>
+      <div class="res-card rv d4"><div class="res-dot"></div><div><div class="res-title">Private School Scholarships</div><div class="res-sub">Academic scholarships across Sydney's independent schools</div></div></div>
+    </div>
+    <div class="schols" style="margin-top:1rem">
+      <div class="sch rv d1"><div class="sch-line"></div><div class="sch-n">OC Offers</div><div class="sch-s">Beecroft, Chatswood + more</div></div>
+      <div class="sch rv d2"><div class="sch-line"></div><div class="sch-n">Selective Offers</div><div class="sch-s">James Ruse, Sydney Boys + more</div></div>
+      <div class="sch rv d3"><div class="sch-line"></div><div class="sch-n">Scholarship Wins</div><div class="sch-s">Top independent schools</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing" class="sec">
+  <div class="wrap">
+    <div class="rv" style="text-align:center;margin-bottom:2rem">
+      <div class="sec-tag" style="justify-content:center">Pricing</div>
+      <h2 class="sec-h">Simple, <em>honest rates</em></h2>
+      <p style="font-size:.9rem;color:var(--text2);max-width:400px;margin:.5rem auto 0;line-height:1.85">No lock-in contracts. No hidden fees. Just focused, consistent tutoring.</p>
+    </div>
+    <div class="price-tabs rv">
+      <button class="ptab active" onclick="switchTab('private',this)">1-on-1 Private</button>
+      <button class="ptab" onclick="switchTab('group',this)">Small Group</button>
+    </div>
+    <div class="price-panel active" id="tab-private">
+      <div class="price-grid">
+        <div class="pcard rv d1">
+          <div class="pc-t">Single session</div>
+          <div class="pc-price">$50</div>
+          <div class="pc-per">per hour</div>
+          <div class="pc-desc">One subject per session. A solid starting point, or for targeted work close to an exam.</div>
+        </div>
+        <div class="pcard featured rv d2">
+          <div class="pc-t">Double session</div>
+          <div class="pc-price">$90</div>
+          <div class="pc-per">for 2 hours</div>
+          <div class="pc-desc">The most common choice. More time means more ground covered and space for proper exam practice.</div>
+          <div class="pc-note">Save $10 vs two singles</div>
+        </div>
+        <div class="pcard rv d3">
+          <div class="pc-t">Online or in person</div>
+          <div class="pc-price">Same</div>
+          <div class="pc-per">rate either way</div>
+          <div class="pc-desc">Zoom works just as well. In person locations are negotiable around Sydney.</div>
+        </div>
+      </div>
+      <p class="price-note">All rates are per session · No booking fees</p>
+    </div>
+    <div class="price-panel" id="tab-group">
+      <div class="group-info rv">
+        <p>Small group sessions are available for OC preparation, focused on Maths and Thinking Skills. Groups are kept small so every student gets proper individual attention.</p>
+        <p>Pricing depends on group size and session length. Get in touch with your available times and I'll put something together that works.</p>
+        <p>OC group sessions are available for students targeting Beecroft, Chatswood, and other Sydney OC placements.</p>
+      </div>
+      <div style="text-align:center;margin-top:1.4rem">
+        <a href="#contact" class="btn1">Ask about group sessions</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonials" class="sec">
+  <div class="wrap">
+    <div style="text-align:center;max-width:460px;margin:0 auto" class="rv">
+      <div class="sec-tag" style="justify-content:center">Testimonials</div>
+      <h2 class="sec-h"><em>In their words</em></h2>
+    </div>
+    <div class="tst-grid">
+      <div class="tst rv d1">
+        <div class="tst-qm">"</div>
+        <div class="tst-b">Polar Bear Tuition explains things at exactly the right level. Our daughter went from anxious about maths to genuinely enjoying problem solving, and she got an OC offer.</div>
+        <div class="tst-div"></div>
+        <div class="tst-who">Parent · OC student</div>
+      </div>
+      <div class="tst rv d2">
+        <div class="tst-qm">"</div>
+        <div class="tst-b">What sets PB Tuition apart is that the tutors have done it themselves. They know what these exams are really testing. Our son trusted the process and earned a selective school offer.</div>
+        <div class="tst-div"></div>
+        <div class="tst-who">Parent · Selective school student</div>
+      </div>
+      <div class="tst rv d3">
+        <div class="tst-qm">"</div>
+        <div class="tst-b">The thinking skills sessions were genuinely transformative. My daughter had never been taught logical reasoning systematically before. Within a term her scores improved significantly, and a scholarship followed.</div>
+        <div class="tst-div"></div>
+        <div class="tst-who">Parent · Scholarship recipient</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PHILOSOPHY ── -->
+<section id="philosophy" class="sec">
+  <div class="wrap">
+    <div class="ph-grid">
+      <div class="rl">
+        <div class="sec-tag">Approach</div>
+        <h2 class="sec-h">How I teach<br><em>differently</em></h2>
+        <p class="ph-p">Competitive exams don't reward memorisation. They reward the student who has genuinely understood how to think. My whole approach is built around that principle.</p>
+        <p class="ph-p">I sat the same exams my students face. I know what the questions are really testing, and I know how to build those skills from the ground up rather than just drilling past papers.</p>
+      </div>
+      <div class="prins rr">
+        <div class="prin"><div class="p-num">01</div><div><div class="p-t">Understanding before speed</div><div class="p-d">Concepts are consolidated before we practise under time pressure. Speed without understanding creates fragile performance on the day.</div></div></div>
+        <div class="prin"><div class="p-num">02</div><div><div class="p-t">Targeted gap-filling</div><div class="p-d">Every student starts with a diagnostic. We work through gaps systematically with no time wasted covering what they already know.</div></div></div>
+        <div class="prin"><div class="p-num">03</div><div><div class="p-t">Exam instinct, not just knowledge</div><div class="p-d">Students learn to read questions, manage their time, eliminate wrong answers, and check their work. That's how knowledge becomes marks.</div></div></div>
+        <div class="prin"><div class="p-num">04</div><div><div class="p-t">Confidence as an outcome</div><div class="p-d">The best results come from students who walk in feeling genuinely ready. Building that confidence is part of the preparation, not an afterthought.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" class="sec">
+  <div class="wrap">
+    <div class="ct-inner rv">
+      <div class="ct-pill"><span class="ct-dot"></span> Taking new students now</div>
+      <h2 class="ct-h">Ready to find your<br><em>personal best?</em></h2>
+      <p class="ct-p">Fill in the form below and include your available times. Whether it's OC, selective school, or a scholarship exam, we'll put together a plan that fits.</p>
+      <div class="enq-form">
+        <div class="enq-row">
+          <div class="enq-field">
+            <label class="enq-label">Parent name</label>
+            <input class="enq-input" type="text" placeholder="Your name" id="f-name">
+          </div>
+          <div class="enq-field">
+            <label class="enq-label">Email</label>
+            <input class="enq-input" type="email" placeholder="your@email.com" id="f-email">
+          </div>
+        </div>
+        <div class="enq-row">
+          <div class="enq-field">
+            <label class="enq-label">Student's year level</label>
+            <select class="enq-input" id="f-year">
+              <option value="" disabled selected>Select year</option>
+              <option>Year 3</option><option>Year 4</option><option>Year 5</option>
+              <option>Year 6</option><option>Year 7</option><option>Year 8</option><option>Year 9</option>
+            </select>
+          </div>
+          <div class="enq-field">
+            <label class="enq-label">Goal</label>
+            <select class="enq-input" id="f-goal">
+              <option value="" disabled selected>Preparing for...</option>
+              <option>OC placement</option>
+              <option>Selective school entry</option>
+              <option>Private school scholarship</option>
+              <option>General tutoring</option>
+              <option>High school readiness</option>
+            </select>
+          </div>
+        </div>
+        <div class="enq-field">
+          <label class="enq-label">Subject/s</label>
+          <select class="enq-input" id="f-subj">
+            <option value="" disabled selected>Select subject</option>
+            <option>Maths</option>
+            <option>Thinking Skills</option>
+            <option>Junior Science</option>
+            <option>Maths + Thinking Skills</option>
+            <option>All three subjects</option>
+          </select>
+        </div>
+        <div class="enq-field">
+          <label class="enq-label">Available days / times</label>
+          <textarea class="enq-input" id="f-times" placeholder="e.g. Weekday afternoons after 4pm, or Saturday mornings. Online or in person?"></textarea>
+        </div>
+        <button class="enq-submit" onclick="handleSubmit()">Send enquiry</button>
+      </div>
+      <div class="ct-note">Sydney NSW · Online via Zoom · In person locations negotiable</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fl"><span>Polar Bear Tuition</span> </div>
+  <div class="fr">Helping students achieve their PB · © 2026</div>
+</footer>
+
+<script>
+/* ─── FLOATING ICE CRYSTALS ─── */
+(function(){
+  const container = document.getElementById('crystals');
+  const crystalSVGs = [
+    `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><line x1="9" y1="1" x2="9" y2="17" stroke="#8ecce8" stroke-width="1.2"/><line x1="1" y1="9" x2="17" y2="9" stroke="#8ecce8" stroke-width="1.2"/><line x1="3" y1="3" x2="15" y2="15" stroke="#8ecce8" stroke-width="1.2"/><line x1="15" y1="3" x2="3" y2="15" stroke="#8ecce8" stroke-width="1.2"/><circle cx="9" cy="9" r="2" fill="#c8e8f5"/><circle cx="9" cy="1.5" r="1.2" fill="#8ecce8" opacity=".6"/><circle cx="9" cy="16.5" r="1.2" fill="#8ecce8" opacity=".6"/><circle cx="1.5" cy="9" r="1.2" fill="#8ecce8" opacity=".6"/><circle cx="16.5" cy="9" r="1.2" fill="#8ecce8" opacity=".6"/></svg>`,
+    `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="#a0d4ee" stroke-width="1"/><line x1="1" y1="7" x2="13" y2="7" stroke="#a0d4ee" stroke-width="1"/><line x1="2.5" y1="2.5" x2="11.5" y2="11.5" stroke="#a0d4ee" stroke-width="1"/><line x1="11.5" y1="2.5" x2="2.5" y2="11.5" stroke="#a0d4ee" stroke-width="1"/><circle cx="7" cy="7" r="1.5" fill="#c8e8f5"/></svg>`,
+    `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="5" y1="0" x2="5" y2="10" stroke="#8ecce8" stroke-width=".8"/><line x1="0" y1="5" x2="10" y2="5" stroke="#8ecce8" stroke-width=".8"/><circle cx="5" cy="5" r="1.2" fill="#eaf5fb"/></svg>`,
+    `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><line x1="11" y1="2" x2="11" y2="20" stroke="#8ecce8" stroke-width="1.3"/><line x1="2" y1="11" x2="20" y2="11" stroke="#8ecce8" stroke-width="1.3"/><line x1="4" y1="4" x2="18" y2="18" stroke="#8ecce8" stroke-width="1.3"/><line x1="18" y1="4" x2="4" y2="18" stroke="#8ecce8" stroke-width="1.3"/><circle cx="11" cy="11" r="2.5" fill="#c8e8f5"/><circle cx="11" cy="2" r="1.4" fill="#8ecce8" opacity=".5"/><circle cx="11" cy="20" r="1.4" fill="#8ecce8" opacity=".5"/><circle cx="2" cy="11" r="1.4" fill="#8ecce8" opacity=".5"/><circle cx="20" cy="11" r="1.4" fill="#8ecce8" opacity=".5"/><circle cx="4.5" cy="4.5" r="1.1" fill="#8ecce8" opacity=".4"/><circle cx="17.5" cy="4.5" r="1.1" fill="#8ecce8" opacity=".4"/><circle cx="4.5" cy="17.5" r="1.1" fill="#8ecce8" opacity=".4"/><circle cx="17.5" cy="17.5" r="1.1" fill="#8ecce8" opacity=".4"/></svg>`,
+  ];
+
+  for(let i=0;i<24;i++){
+    const el = document.createElement('div');
+    el.className = 'crystal';
+    const svgIdx = Math.floor(Math.random()*crystalSVGs.length);
+    el.innerHTML = crystalSVGs[svgIdx];
+    const dur = 18 + Math.random()*22;
+    const delay = -(Math.random()*dur);
+    const left = Math.random()*100;
+    const opacity = 0.25 + Math.random()*0.45;
+    const drift = (Math.random()-0.5)*80;
+    el.style.cssText = `
+      left:${left}%;
+      opacity:0;
+      animation-duration:${dur}s;
+      animation-delay:${delay}s;
+      transform:translateX(0);
+      filter:opacity(${opacity});
+    `;
+    el.style.setProperty('--drift', drift+'px');
+    el.querySelector('svg').style.cssText = `display:block;`;
+    container.appendChild(el);
+  }
+
+  /* Add horizontal drift via JS */
+  const crystalEls = container.querySelectorAll('.crystal');
+  crystalEls.forEach(el=>{
+    const drift = (Math.random()-0.5)*60;
+    const dur = parseFloat(el.style.animationDuration)*1000;
+    let start = null;
+    const baseLeft = parseFloat(el.style.left);
+    function step(ts){
+      if(!start) start=ts;
+      const progress = ((ts-start)%dur)/dur;
+      el.style.transform = `translateX(${Math.sin(progress*Math.PI*2)*drift}px)`;
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+})();
+
+/* ─── CURSOR ─── */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('ring');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function animR(){
+  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animR);
+})();
+document.querySelectorAll('a,button,.srv,.res-card,.cr,.prin,.tst,.hs,.pcard,.sch').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('big'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('big'));
+});
+
+/* ─── NAV ─── */
+window.addEventListener('scroll',()=>
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>60)
+);
+
+/* ─── SCROLL REVEAL ─── */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')});
+},{threshold:.07});
+document.querySelectorAll('.rv,.rl,.rr').forEach(el=>io.observe(el));
+
+/* ─── PRICING TABS ─── */
+function switchTab(id,btn){
+  document.querySelectorAll('.price-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ─── SMOOTH SCROLL ─── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}
+  });
+});
+
+/* ─── FORM ─── */
+function handleSubmit(){
+  const name=document.getElementById('f-name').value||'';
+  const email=document.getElementById('f-email').value||'';
+  const times=document.getElementById('f-times').value||'';
+  const goal=document.getElementById('f-goal').value||'';
+  const subj=document.getElementById('f-subj').value||'';
+  const subject=encodeURIComponent('Polar Bear Tuition Enquiry');
+  const body=encodeURIComponent(`Hi Serena,\n\nI'd like to enquire about tutoring.\n\nParent: ${name}\nReply to: ${email}\nGoal: ${goal}\nSubject: ${subj}\n\nAvailable times:\n${times}\n`);
+  window.location.href=`mailto:polarbeartuition@gmail.com?subject=${subject}&body=${body}`;
+}
+</script>
+</body>
+</html>
