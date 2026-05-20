@@ -673,7 +673,7 @@ footer{background:var(--arct2);border-top:1px solid rgba(255,255,255,.05);paddin
         </div>
         <button class="enq-submit" onclick="handleSubmit()">Send enquiry</button>
       </div>
-      <div class="ct-note">Sydney NSW · Online via Zoom · In person locations negotiable</div>
+      <div class="ct-note">Sydney NSW · Online via Zoom · Contact: polarbeartuition@gmail.com</div>
     </div>
   </div>
 </section>
@@ -787,7 +787,7 @@ function handleSubmit(){
   const goal=document.getElementById('f-goal').value||'';
   const subj=document.getElementById('f-subj').value||'';
   const subject=encodeURIComponent('Polar Bear Tuition Enquiry');
-  const body=encodeURIComponent(`Hi Serena,\n\nI'd like to enquire about tutoring.\n\nParent: ${name}\nReply to: ${email}\nGoal: ${goal}\nSubject: ${subj}\n\nAvailable times:\n${times}\n`);
+  const body=encodeURIComponent(`Hi PB Tuition,\n\nI'd like to enquire about tutoring.\n\nParent: ${name}\nReply to: ${email}\nGoal: ${goal}\nSubject: ${subj}\n\nAvailable times:\n${times}\n`);
   window.location.href=`mailto:polarbeartuition@gmail.com?subject=${subject}&body=${body}`;
 }
 </script>
